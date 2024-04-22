@@ -20,6 +20,7 @@ def prevnote(freq):
     return freq * power(_2,-_1/_12)
 
 class App(tk.Tk):
+    # {{{1 trace_freq_var
     def trace_freq_var(self,*traceargs):
         freq = self.freq_var.get()
         _F = D(freq)
@@ -179,8 +180,9 @@ class App(tk.Tk):
         self.freq_var_oct_10_note_A.set(next(note_iter))
         self.freq_var_oct_10_note_As.set(next(note_iter))
         self.freq_var_oct_10_note_B.set(next(note_iter))
+        # }}}1
 
-
+    # {{{1 trace_bpm_var
     def trace_bpm_var(self,*traceargs):
         bpm = self.bpm_var.get()
 
@@ -199,6 +201,9 @@ class App(tk.Tk):
         ms_1_32_note = 60/8/bpm*1000
         ms_1_64_note = 60/16/bpm*1000
         ms_1_128_note = 60/32/bpm*1000
+
+        ms_1_2_note_dotted = ms_1_2_note + ms_1_4_note
+
         self.ms_128_bar.set(f"{ms_128_bar:.06f}")
         self.ms_64_bar.set(f"{ms_64_bar:.06f}")
         self.ms_32_bar.set(f"{ms_32_bar:.06f}")
@@ -215,6 +220,8 @@ class App(tk.Tk):
         self.ms_1_64_note.set(f"{ms_1_64_note:.06f}")
         self.ms_1_128_note.set(f"{ms_1_128_note:.06f}")
 
+        self.ms_1_2_note_dotted.set(f"{ms_1_2_note_dotted:.06f}")
+
         hz_128_bar = bpm/60/512
         hz_64_bar = bpm/60/256
         hz_32_bar = bpm/60/128
@@ -230,6 +237,8 @@ class App(tk.Tk):
         hz_1_32_note = bpm/60*8
         hz_1_64_note = bpm/60*16
         hz_1_128_note = bpm/60*32
+
+        hz_1_2_note_dotted = hz_1_2_note + hz_1_4_note
         
         self.hz_128_bar.set(f"{hz_128_bar:.06f}")
         self.hz_64_bar.set(f"{hz_64_bar:.06f}")
@@ -247,11 +256,15 @@ class App(tk.Tk):
         self.hz_1_64_note.set(f"{hz_1_64_note:.06f}")
         self.hz_1_128_note.set(f"{hz_1_128_note:.06f}")
 
+        self.hz_1_2_note_dotted.set(f"{hz_1_2_note_dotted:.06f}")
+        # }}}1
+
     def __init__(self):
         super().__init__()
         self.bpm_var = tk.DoubleVar()
         self.freq_var = tk.DoubleVar()
 
+        # {{{1 instantiate frequency variables
         self.freq_var_oct_0_note_C = tk.DoubleVar()
         self.freq_var_oct_0_note_Cs = tk.DoubleVar()
         self.freq_var_oct_0_note_D = tk.DoubleVar()
@@ -394,7 +407,9 @@ class App(tk.Tk):
         self.freq_var_oct_10_note_A = tk.DoubleVar()
         self.freq_var_oct_10_note_As = tk.DoubleVar()
         self.freq_var_oct_10_note_B = tk.DoubleVar()
+        # }}}1
 
+        # {{{1 instantiate milliseconds variables
         self.ms_128_bar = tk.DoubleVar()
         self.ms_64_bar = tk.DoubleVar()
         self.ms_32_bar = tk.DoubleVar()
@@ -410,6 +425,8 @@ class App(tk.Tk):
         self.ms_1_32_note = tk.DoubleVar()
         self.ms_1_64_note = tk.DoubleVar()
         self.ms_1_128_note = tk.DoubleVar()
+
+        self.ms_1_2_note_dotted = tk.DoubleVar()
 
         self.hz_1_128_note = tk.DoubleVar()
         self.hz_1_64_note = tk.DoubleVar()
@@ -427,6 +444,9 @@ class App(tk.Tk):
         self.hz_64_bar = tk.DoubleVar()
         self.hz_128_bar = tk.DoubleVar()
 
+        self.hz_1_2_note_dotted = tk.DoubleVar()
+        # }}}1
+
         self.bpm_var.set(120.0)
         self.freq_var.set(440.0)
 
@@ -438,8 +458,8 @@ class App(tk.Tk):
 
         self.leftframe = ttk.Frame(self)
         self.rightframe = ttk.Frame(self)
-        self.leftframe.pack(side="left")
-        self.rightframe.pack(side="right")
+        self.leftframe.pack(side="left",anchor="nw")
+        self.rightframe.pack(side="right",anchor="nw")
 
         self.bpm_spinbox = tk.Spinbox(self.leftframe,
                                       textvariable=self.bpm_var,
@@ -452,7 +472,8 @@ class App(tk.Tk):
         self.btnframe.pack()
 
         self.lbl_ms = ttk.Label(self.btnframe,text="ms")
-
+        
+        # {{{1 instantiate millisecond buttons
         self.btn_ms_1_128_note = ttk.Button(self.btnframe,textvariable=self.ms_1_128_note,command=lambda s=self,v=self.ms_1_128_note:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
         self.btn_ms_1_64_note = ttk.Button(self.btnframe,textvariable=self.ms_1_64_note,command=lambda s=self,v=self.ms_1_64_note:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
         self.btn_ms_1_32_note = ttk.Button(self.btnframe,textvariable=self.ms_1_32_note,command=lambda s=self,v=self.ms_1_32_note:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
@@ -469,8 +490,12 @@ class App(tk.Tk):
         self.btn_ms_64_bar = ttk.Button(self.btnframe,textvariable=self.ms_64_bar,command=lambda s=self,v=self.ms_64_bar:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
         self.btn_ms_128_bar = ttk.Button(self.btnframe,textvariable=self.ms_128_bar,command=lambda s=self,v=self.ms_128_bar:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
 
+        self.btn_ms_1_2_note_dotted = ttk.Button(self.btnframe,textvariable=self.ms_1_2_note_dotted,command=lambda s=self,v=self.ms_1_2_note_dotted:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        # }}}1
+
         self.lbl_duration = ttk.Label(self.btnframe,text="")
 
+        # {{{1 instantiate duration labels
         self.lbl_1_128_note = ttk.Label(self.btnframe,text="1/128th")
         self.lbl_1_64_note = ttk.Label(self.btnframe,text="1/64th")
         self.lbl_1_32_note = ttk.Label(self.btnframe,text="1/32nd")
@@ -487,8 +512,13 @@ class App(tk.Tk):
         self.lbl_64_bar = ttk.Label(self.btnframe,text="64 bar")
         self.lbl_128_bar = ttk.Label(self.btnframe,text="128 bar")
 
+        self.lbl_1_2_note_dotted = ttk.Label(self.btnframe,text="·1/2")
+
+        # }}}1
+
         self.lbl_hz = ttk.Label(self.btnframe,text="hz")
 
+        # {{{1 instantiate hertz ratios buttons
         self.btn_hz_1_128_note = ttk.Button(self.btnframe,textvariable=self.hz_1_128_note,command=lambda s=self,v=self.hz_1_128_note:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
         self.btn_hz_1_64_note = ttk.Button(self.btnframe,textvariable=self.hz_1_64_note,command=lambda s=self,v=self.hz_1_64_note:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
         self.btn_hz_1_32_note = ttk.Button(self.btnframe,textvariable=self.hz_1_32_note,command=lambda s=self,v=self.hz_1_32_note:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
@@ -505,8 +535,12 @@ class App(tk.Tk):
         self.btn_hz_64_bar = ttk.Button(self.btnframe,textvariable=self.hz_64_bar,command=lambda s=self,v=self.hz_64_bar:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
         self.btn_hz_128_bar = ttk.Button(self.btnframe,textvariable=self.hz_128_bar,command=lambda s=self,v=self.hz_128_bar:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
 
+        self.btn_hz_1_2_note_dotted = ttk.Button(self.btnframe,textvariable=self.hz_1_2_note_dotted,command=lambda s=self,v=self.hz_1_2_note_dotted:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        # }}}1
+
         self.lbl_ms.grid(column=0,row=0)
 
+        # {{{1 layout millisecond buttons
         self.btn_ms_1_128_note.grid(column=0,row=1)
         self.btn_ms_1_64_note.grid(column=0,row=2)
         self.btn_ms_1_32_note.grid(column=0,row=3)
@@ -523,8 +557,12 @@ class App(tk.Tk):
         self.btn_ms_64_bar.grid(column=0,row=14)
         self.btn_ms_128_bar.grid(column=0,row=15)
 
+        self.btn_ms_1_2_note_dotted.grid(column=0,row=16)
+        # }}}1
+
         self.lbl_duration.grid(column=1,row=0)
 
+        # {{{1 layout duration labels
         self.lbl_1_128_note.grid(column=1,row=1)
         self.lbl_1_64_note.grid(column=1,row=2)
         self.lbl_1_32_note.grid(column=1,row=3)
@@ -541,8 +579,12 @@ class App(tk.Tk):
         self.lbl_64_bar.grid(column=1,row=14)
         self.lbl_128_bar.grid(column=1,row=15)
 
-        self.lbl_hz.grid(column=2,row=0)
+        self.lbl_1_2_note_dotted.grid(column=1,row=16)
+        # }}}1
 
+        self.lbl_hz.grid(column=2,row=0)
+        
+        # {{{1 layout hertz ratio buttons
         self.btn_hz_1_128_note.grid(column=2,row=1)
         self.btn_hz_1_64_note.grid(column=2,row=2)
         self.btn_hz_1_32_note.grid(column=2,row=3)
@@ -559,6 +601,9 @@ class App(tk.Tk):
         self.btn_hz_64_bar.grid(column=2,row=14)
         self.btn_hz_128_bar.grid(column=2,row=15)
 
+        self.btn_hz_1_2_note_dotted.grid(column=2,row=16)
+        # }}}1
+
         self.freq_spinbox = tk.Spinbox(self.rightframe,
                                        textvariable=self.freq_var,
                                        from_=1.0,
@@ -570,7 +615,7 @@ class App(tk.Tk):
                                         labelwidget=self.freqlabel)
         self.btnframe2.pack()
 
-
+        # {{{1 instantiate note frequency buttons
         self.freq_btn_oct_0_note_C = ttk.Button(self.btnframe2,
                                       textvariable=self.freq_var_oct_0_note_C,
                                       command=lambda s=self,v=self.freq_var_oct_0_note_C:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
@@ -1108,10 +1153,12 @@ class App(tk.Tk):
         self.freq_btn_oct_10_note_B = ttk.Button(self.btnframe2,
                                       textvariable=self.freq_var_oct_10_note_B,
                                       command=lambda s=self,v=self.freq_var_oct_10_note_B:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        # }}}1
 
         self.freq_lbl_xy = ttk.Label(self.btnframe2,text="")
         self.freq_lbl_xy.grid(column=0,row=0)
 
+        # {{{1 instantiate note frequency labels
         self.freq_lbl_note_C = ttk.Label(self.btnframe2,text="C")
         self.freq_lbl_note_Cs = ttk.Label(self.btnframe2,text="C#")
         self.freq_lbl_note_D = ttk.Label(self.btnframe2,text="D")
@@ -1136,7 +1183,9 @@ class App(tk.Tk):
         self.freq_lbl_oct_8 = ttk.Label(self.btnframe2,text="8")
         self.freq_lbl_oct_9 = ttk.Label(self.btnframe2,text="9")
         self.freq_lbl_oct_10 = ttk.Label(self.btnframe2,text="10")
+        # }}}1
 
+        # {{{1 layout note frequency labels
         self.freq_lbl_note_C.grid(column=0,row=1)
         self.freq_lbl_note_Cs.grid(column=0,row=2)
         self.freq_lbl_note_D.grid(column=0,row=3)
@@ -1161,7 +1210,9 @@ class App(tk.Tk):
         self.freq_lbl_oct_8.grid(column=9,row=0)
         self.freq_lbl_oct_9.grid(column=10,row=0)
         self.freq_lbl_oct_10.grid(column=11,row=0)
+        # }}}1
 
+        # {{{1 layout note frequency buttons
         self.freq_btn_oct_0_note_C.grid( column=1, row=1)
         self.freq_btn_oct_0_note_Cs.grid(column=1, row=2)
         self.freq_btn_oct_0_note_D.grid( column=1, row=3)
@@ -1304,8 +1355,9 @@ class App(tk.Tk):
         self.freq_btn_oct_10_note_A.grid( column=11, row=10)
         self.freq_btn_oct_10_note_As.grid(column=11, row=11)
         self.freq_btn_oct_10_note_B.grid( column=11, row=12)
-
+        # }}}1
 
 
 app = App()
 app.mainloop()
+
