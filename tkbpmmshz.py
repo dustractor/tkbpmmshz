@@ -1,18 +1,19 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-import itertools
+from itertools import count
 import decimal
 
 """ Set a bpm and click the buttons to copy ms and hz values to the clipboard.
     Set a frequency for A4 and click the buttons to copy hz values to the clipboard.
 """
 
-_C = decimal.getcontext()
-power = _C.power
+power = decimal.getcontext().power
 D = decimal.Decimal
 _1 = D(1)
 _2 = D(2)
 _12 = D(12)
+
+
 
 def nextnote(freq):
     return freq * power(_2,_1/_12)
@@ -202,7 +203,15 @@ class App(tk.Tk):
         ms_1_64_note = 60/16/bpm*1000
         ms_1_128_note = 60/32/bpm*1000
 
-        ms_1_2_note_dotted = ms_1_2_note + ms_1_4_note
+        ms_1_2_note_dotted = 180/bpm*1000
+        ms_1_4_note_dotted = 90/bpm*1000
+        ms_1_8_note_dotted = 45/bpm*1000
+        ms_1_16_note_dotted = 22.5/bpm*1000
+
+        ms_1_2_note_triplet = 80/bpm*1000
+        ms_1_4_note_triplet = 40/bpm*1000
+        ms_1_8_note_triplet = 20/bpm*1000
+        ms_1_16_note_triplet = 10/bpm*1000
 
         self.ms_128_bar.set(f"{ms_128_bar:.06f}")
         self.ms_64_bar.set(f"{ms_64_bar:.06f}")
@@ -221,6 +230,14 @@ class App(tk.Tk):
         self.ms_1_128_note.set(f"{ms_1_128_note:.06f}")
 
         self.ms_1_2_note_dotted.set(f"{ms_1_2_note_dotted:.06f}")
+        self.ms_1_4_note_dotted.set(f"{ms_1_4_note_dotted:.06f}")
+        self.ms_1_8_note_dotted.set(f"{ms_1_8_note_dotted:.06f}")
+        self.ms_1_16_note_dotted.set(f"{ms_1_16_note_dotted:.06f}")
+
+        self.ms_1_2_note_triplet.set(f"{ms_1_2_note_triplet:.06f}")
+        self.ms_1_4_note_triplet.set(f"{ms_1_4_note_triplet:.06f}")
+        self.ms_1_8_note_triplet.set(f"{ms_1_8_note_triplet:.06f}")
+        self.ms_1_16_note_triplet.set(f"{ms_1_16_note_triplet:.06f}")
 
         hz_128_bar = bpm/60/512
         hz_64_bar = bpm/60/256
@@ -238,7 +255,15 @@ class App(tk.Tk):
         hz_1_64_note = bpm/60*16
         hz_1_128_note = bpm/60*32
 
-        hz_1_2_note_dotted = hz_1_2_note + hz_1_4_note
+        hz_1_2_note_dotted = bpm/180
+        hz_1_4_note_dotted =  bpm/90
+        hz_1_8_note_dotted =  bpm/45
+        hz_1_16_note_dotted =  bpm/22.5
+
+        hz_1_2_note_triplet = bpm/80
+        hz_1_4_note_triplet =  bpm/40
+        hz_1_8_note_triplet =  bpm/20
+        hz_1_16_note_triplet =  bpm/10
         
         self.hz_128_bar.set(f"{hz_128_bar:.06f}")
         self.hz_64_bar.set(f"{hz_64_bar:.06f}")
@@ -257,6 +282,14 @@ class App(tk.Tk):
         self.hz_1_128_note.set(f"{hz_1_128_note:.06f}")
 
         self.hz_1_2_note_dotted.set(f"{hz_1_2_note_dotted:.06f}")
+        self.hz_1_4_note_dotted.set(f"{hz_1_4_note_dotted:.06f}")
+        self.hz_1_8_note_dotted.set(f"{hz_1_8_note_dotted:.06f}")
+        self.hz_1_16_note_dotted.set(f"{hz_1_16_note_dotted:.06f}")
+
+        self.hz_1_2_note_triplet.set(f"{hz_1_2_note_triplet:.06f}")
+        self.hz_1_4_note_triplet.set(f"{hz_1_4_note_triplet:.06f}")
+        self.hz_1_8_note_triplet.set(f"{hz_1_8_note_triplet:.06f}")
+        self.hz_1_16_note_triplet.set(f"{hz_1_16_note_triplet:.06f}")
         # }}}1
 
     def __init__(self):
@@ -427,6 +460,14 @@ class App(tk.Tk):
         self.ms_1_128_note = tk.DoubleVar()
 
         self.ms_1_2_note_dotted = tk.DoubleVar()
+        self.ms_1_4_note_dotted = tk.DoubleVar()
+        self.ms_1_8_note_dotted = tk.DoubleVar()
+        self.ms_1_16_note_dotted = tk.DoubleVar()
+
+        self.ms_1_2_note_triplet = tk.DoubleVar()
+        self.ms_1_4_note_triplet = tk.DoubleVar()
+        self.ms_1_8_note_triplet = tk.DoubleVar()
+        self.ms_1_16_note_triplet = tk.DoubleVar()
 
         self.hz_1_128_note = tk.DoubleVar()
         self.hz_1_64_note = tk.DoubleVar()
@@ -445,6 +486,14 @@ class App(tk.Tk):
         self.hz_128_bar = tk.DoubleVar()
 
         self.hz_1_2_note_dotted = tk.DoubleVar()
+        self.hz_1_4_note_dotted = tk.DoubleVar()
+        self.hz_1_8_note_dotted = tk.DoubleVar()
+        self.hz_1_16_note_dotted = tk.DoubleVar()
+
+        self.hz_1_2_note_triplet = tk.DoubleVar()
+        self.hz_1_4_note_triplet = tk.DoubleVar()
+        self.hz_1_8_note_triplet = tk.DoubleVar()
+        self.hz_1_16_note_triplet = tk.DoubleVar()
         # }}}1
 
         self.bpm_var.set(120.0)
@@ -491,6 +540,14 @@ class App(tk.Tk):
         self.btn_ms_128_bar = ttk.Button(self.btnframe,textvariable=self.ms_128_bar,command=lambda s=self,v=self.ms_128_bar:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
 
         self.btn_ms_1_2_note_dotted = ttk.Button(self.btnframe,textvariable=self.ms_1_2_note_dotted,command=lambda s=self,v=self.ms_1_2_note_dotted:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_ms_1_4_note_dotted = ttk.Button(self.btnframe,textvariable=self.ms_1_4_note_dotted,command=lambda s=self,v=self.ms_1_4_note_dotted:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_ms_1_8_note_dotted = ttk.Button(self.btnframe,textvariable=self.ms_1_8_note_dotted,command=lambda s=self,v=self.ms_1_8_note_dotted:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_ms_1_16_note_dotted = ttk.Button(self.btnframe,textvariable=self.ms_1_16_note_dotted,command=lambda s=self,v=self.ms_1_16_note_dotted:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+
+        self.btn_ms_1_2_note_triplet = ttk.Button(self.btnframe,textvariable=self.ms_1_2_note_triplet,command=lambda s=self,v=self.ms_1_2_note_triplet:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_ms_1_4_note_triplet = ttk.Button(self.btnframe,textvariable=self.ms_1_4_note_triplet,command=lambda s=self,v=self.ms_1_4_note_triplet:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_ms_1_8_note_triplet = ttk.Button(self.btnframe,textvariable=self.ms_1_8_note_triplet,command=lambda s=self,v=self.ms_1_8_note_triplet:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_ms_1_16_note_triplet = ttk.Button(self.btnframe,textvariable=self.ms_1_16_note_triplet,command=lambda s=self,v=self.ms_1_16_note_triplet:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
         # }}}1
 
         self.lbl_duration = ttk.Label(self.btnframe,text="")
@@ -513,6 +570,14 @@ class App(tk.Tk):
         self.lbl_128_bar = ttk.Label(self.btnframe,text="128 bar")
 
         self.lbl_1_2_note_dotted = ttk.Label(self.btnframe,text="·1/2")
+        self.lbl_1_4_note_dotted = ttk.Label(self.btnframe,text="·1/4")
+        self.lbl_1_8_note_dotted = ttk.Label(self.btnframe,text="·1/8")
+        self.lbl_1_16_note_dotted = ttk.Label(self.btnframe,text="·1/16")
+
+        self.lbl_1_2_note_triplet = ttk.Label(self.btnframe,text="1/2t")
+        self.lbl_1_4_note_triplet = ttk.Label(self.btnframe,text="1/4t")
+        self.lbl_1_8_note_triplet = ttk.Label(self.btnframe,text="1/8t")
+        self.lbl_1_16_note_triplet = ttk.Label(self.btnframe,text="1/16t")
 
         # }}}1
 
@@ -536,72 +601,105 @@ class App(tk.Tk):
         self.btn_hz_128_bar = ttk.Button(self.btnframe,textvariable=self.hz_128_bar,command=lambda s=self,v=self.hz_128_bar:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
 
         self.btn_hz_1_2_note_dotted = ttk.Button(self.btnframe,textvariable=self.hz_1_2_note_dotted,command=lambda s=self,v=self.hz_1_2_note_dotted:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
-        # }}}1
+        self.btn_hz_1_4_note_dotted = ttk.Button(self.btnframe,textvariable=self.hz_1_4_note_dotted,command=lambda s=self,v=self.hz_1_4_note_dotted:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_hz_1_8_note_dotted = ttk.Button(self.btnframe,textvariable=self.hz_1_8_note_dotted,command=lambda s=self,v=self.hz_1_8_note_dotted:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_hz_1_16_note_dotted = ttk.Button(self.btnframe,textvariable=self.hz_1_16_note_dotted,command=lambda s=self,v=self.hz_1_16_note_dotted:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
 
-        self.lbl_ms.grid(column=0,row=0)
+        self.btn_hz_1_2_note_triplet = ttk.Button(self.btnframe,textvariable=self.hz_1_2_note_triplet,command=lambda s=self,v=self.hz_1_2_note_triplet:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_hz_1_4_note_triplet = ttk.Button(self.btnframe,textvariable=self.hz_1_4_note_triplet,command=lambda s=self,v=self.hz_1_4_note_triplet:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_hz_1_8_note_triplet = ttk.Button(self.btnframe,textvariable=self.hz_1_8_note_triplet,command=lambda s=self,v=self.hz_1_8_note_triplet:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        self.btn_hz_1_16_note_triplet = ttk.Button(self.btnframe,textvariable=self.hz_1_16_note_triplet,command=lambda s=self,v=self.hz_1_16_note_triplet:[s.clipboard_clear(),s.clipboard_append(str(v.get()))][:])
+        # }}}1
+        r = count()
+        self.lbl_ms.grid(column=0,row=next(r))
 
         # {{{1 layout millisecond buttons
-        self.btn_ms_1_128_note.grid(column=0,row=1)
-        self.btn_ms_1_64_note.grid(column=0,row=2)
-        self.btn_ms_1_32_note.grid(column=0,row=3)
-        self.btn_ms_1_16_note.grid(column=0,row=4)
-        self.btn_ms_1_8_note.grid(column=0,row=5)
-        self.btn_ms_1_4_note.grid(column=0,row=6)
-        self.btn_ms_1_2_note.grid(column=0,row=7)
-        self.btn_ms_1_bar.grid(column=0,row=8)
-        self.btn_ms_2_bar.grid(column=0,row=9)
-        self.btn_ms_4_bar.grid(column=0,row=10)
-        self.btn_ms_8_bar.grid(column=0,row=11)
-        self.btn_ms_16_bar.grid(column=0,row=12)
-        self.btn_ms_32_bar.grid(column=0,row=13)
-        self.btn_ms_64_bar.grid(column=0,row=14)
-        self.btn_ms_128_bar.grid(column=0,row=15)
+        self.btn_ms_1_128_note.grid(column=0,row=next(r))
+        self.btn_ms_1_64_note.grid(column=0,row=next(r))
+        self.btn_ms_1_32_note.grid(column=0,row=next(r))
+        self.btn_ms_1_16_note.grid(column=0,row=next(r))
+        self.btn_ms_1_8_note.grid(column=0,row=next(r))
+        self.btn_ms_1_4_note.grid(column=0,row=next(r))
+        self.btn_ms_1_2_note.grid(column=0,row=next(r))
+        self.btn_ms_1_bar.grid(column=0,row=next(r))
+        self.btn_ms_2_bar.grid(column=0,row=next(r))
+        self.btn_ms_4_bar.grid(column=0,row=next(r))
+        self.btn_ms_8_bar.grid(column=0,row=next(r))
+        self.btn_ms_16_bar.grid(column=0,row=next(r))
+        self.btn_ms_32_bar.grid(column=0,row=next(r))
+        self.btn_ms_64_bar.grid(column=0,row=next(r))
+        self.btn_ms_128_bar.grid(column=0,row=next(r))
 
-        self.btn_ms_1_2_note_dotted.grid(column=0,row=16)
+        self.btn_ms_1_2_note_dotted.grid(column=0,row=next(r))
+        self.btn_ms_1_4_note_dotted.grid(column=0,row=next(r))
+        self.btn_ms_1_8_note_dotted.grid(column=0,row=next(r))
+        self.btn_ms_1_16_note_dotted.grid(column=0,row=next(r))
+
+        self.btn_ms_1_2_note_triplet.grid(column=0,row=next(r))
+        self.btn_ms_1_4_note_triplet.grid(column=0,row=next(r))
+        self.btn_ms_1_8_note_triplet.grid(column=0,row=next(r))
+        self.btn_ms_1_16_note_triplet.grid(column=0,row=next(r))
         # }}}1
 
-        self.lbl_duration.grid(column=1,row=0)
+        r = count()
+        self.lbl_duration.grid(column=1,row=next(r))
 
         # {{{1 layout duration labels
-        self.lbl_1_128_note.grid(column=1,row=1)
-        self.lbl_1_64_note.grid(column=1,row=2)
-        self.lbl_1_32_note.grid(column=1,row=3)
-        self.lbl_1_16_note.grid(column=1,row=4)
-        self.lbl_1_8_note.grid(column=1,row=5)
-        self.lbl_1_4_note.grid(column=1,row=6)
-        self.lbl_1_2_note.grid(column=1,row=7)
-        self.lbl_1_bar.grid(column=1,row=8)
-        self.lbl_2_bar.grid(column=1,row=9)
-        self.lbl_4_bar.grid(column=1,row=10)
-        self.lbl_8_bar.grid(column=1,row=11)
-        self.lbl_16_bar.grid(column=1,row=12)
-        self.lbl_32_bar.grid(column=1,row=13)
-        self.lbl_64_bar.grid(column=1,row=14)
-        self.lbl_128_bar.grid(column=1,row=15)
+        self.lbl_1_128_note.grid(column=1,row=next(r))
+        self.lbl_1_64_note.grid(column=1,row=next(r))
+        self.lbl_1_32_note.grid(column=1,row=next(r))
+        self.lbl_1_16_note.grid(column=1,row=next(r))
+        self.lbl_1_8_note.grid(column=1,row=next(r))
+        self.lbl_1_4_note.grid(column=1,row=next(r))
+        self.lbl_1_2_note.grid(column=1,row=next(r))
+        self.lbl_1_bar.grid(column=1,row=next(r))
+        self.lbl_2_bar.grid(column=1,row=next(r))
+        self.lbl_4_bar.grid(column=1,row=next(r))
+        self.lbl_8_bar.grid(column=1,row=next(r))
+        self.lbl_16_bar.grid(column=1,row=next(r))
+        self.lbl_32_bar.grid(column=1,row=next(r))
+        self.lbl_64_bar.grid(column=1,row=next(r))
+        self.lbl_128_bar.grid(column=1,row=next(r))
 
-        self.lbl_1_2_note_dotted.grid(column=1,row=16)
+        self.lbl_1_2_note_dotted.grid(column=1,row=next(r))
+        self.lbl_1_4_note_dotted.grid(column=1,row=next(r))
+        self.lbl_1_8_note_dotted.grid(column=1,row=next(r))
+        self.lbl_1_16_note_dotted.grid(column=1,row=next(r))
+
+        self.lbl_1_2_note_triplet.grid(column=1,row=next(r))
+        self.lbl_1_4_note_triplet.grid(column=1,row=next(r))
+        self.lbl_1_8_note_triplet.grid(column=1,row=next(r))
+        self.lbl_1_16_note_triplet.grid(column=1,row=next(r))
         # }}}1
-
-        self.lbl_hz.grid(column=2,row=0)
+        r = count()
+        self.lbl_hz.grid(column=2,row=next(r))
         
         # {{{1 layout hertz ratio buttons
-        self.btn_hz_1_128_note.grid(column=2,row=1)
-        self.btn_hz_1_64_note.grid(column=2,row=2)
-        self.btn_hz_1_32_note.grid(column=2,row=3)
-        self.btn_hz_1_16_note.grid(column=2,row=4)
-        self.btn_hz_1_8_note.grid(column=2,row=5)
-        self.btn_hz_1_4_note.grid(column=2,row=6)
-        self.btn_hz_1_2_note.grid(column=2,row=7)
-        self.btn_hz_1_bar.grid(column=2,row=8)
-        self.btn_hz_2_bar.grid(column=2,row=9)
-        self.btn_hz_4_bar.grid(column=2,row=10)
-        self.btn_hz_8_bar.grid(column=2,row=11)
-        self.btn_hz_16_bar.grid(column=2,row=12)
-        self.btn_hz_32_bar.grid(column=2,row=13)
-        self.btn_hz_64_bar.grid(column=2,row=14)
-        self.btn_hz_128_bar.grid(column=2,row=15)
+        self.btn_hz_1_128_note.grid(column=2,row=next(r))
+        self.btn_hz_1_64_note.grid(column=2,row=next(r))
+        self.btn_hz_1_32_note.grid(column=2,row=next(r))
+        self.btn_hz_1_16_note.grid(column=2,row=next(r))
+        self.btn_hz_1_8_note.grid(column=2,row=next(r))
+        self.btn_hz_1_4_note.grid(column=2,row=next(r))
+        self.btn_hz_1_2_note.grid(column=2,row=next(r))
+        self.btn_hz_1_bar.grid(column=2,row=next(r))
+        self.btn_hz_2_bar.grid(column=2,row=next(r))
+        self.btn_hz_4_bar.grid(column=2,row=next(r))
+        self.btn_hz_8_bar.grid(column=2,row=next(r))
+        self.btn_hz_16_bar.grid(column=2,row=next(r))
+        self.btn_hz_32_bar.grid(column=2,row=next(r))
+        self.btn_hz_64_bar.grid(column=2,row=next(r))
+        self.btn_hz_128_bar.grid(column=2,row=next(r))
 
-        self.btn_hz_1_2_note_dotted.grid(column=2,row=16)
+        self.btn_hz_1_2_note_dotted.grid(column=2,row=next(r))
+        self.btn_hz_1_4_note_dotted.grid(column=2,row=next(r))
+        self.btn_hz_1_8_note_dotted.grid(column=2,row=next(r))
+        self.btn_hz_1_16_note_dotted.grid(column=2,row=next(r))
+
+        self.btn_hz_1_2_note_triplet.grid(column=2,row=next(r))
+        self.btn_hz_1_4_note_triplet.grid(column=2,row=next(r))
+        self.btn_hz_1_8_note_triplet.grid(column=2,row=next(r))
+        self.btn_hz_1_16_note_triplet.grid(column=2,row=next(r))
         # }}}1
 
         self.freq_spinbox = tk.Spinbox(self.rightframe,
