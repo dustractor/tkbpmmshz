@@ -186,32 +186,36 @@ class App(tk.Tk):
     # {{{1 trace_bpm_var
     def trace_bpm_var(self,*traceargs):
         bpm = self.bpm_var.get()
+        use_1k = self.ms_x1k.get()
+        print("use_1k:",use_1k)
+        scale = [1,1000][use_1k]
+        print("scale:",scale)
 
-        ms_128_bar = 60*512/bpm*1000
-        ms_64_bar = 60*256/bpm*1000
-        ms_32_bar = 60*128/bpm*1000
-        ms_16_bar = 60*64/bpm*1000
-        ms_8_bar = 60*32/bpm*1000
-        ms_4_bar = 60*16/bpm*1000
-        ms_2_bar = 60*8/bpm*1000
-        ms_1_bar = 60*4/bpm*1000
-        ms_1_2_note = 60*2/bpm*1000
-        ms_1_4_note = 60/bpm*1000
-        ms_1_8_note = 60/2/bpm*1000
-        ms_1_16_note = 60/4/bpm*1000
-        ms_1_32_note = 60/8/bpm*1000
-        ms_1_64_note = 60/16/bpm*1000
-        ms_1_128_note = 60/32/bpm*1000
+        ms_128_bar = 60*512 / bpm * scale
+        ms_64_bar = 60*256 / bpm * scale
+        ms_32_bar = 60*128 / bpm * scale
+        ms_16_bar = 60*64 / bpm * scale
+        ms_8_bar = 60*32 / bpm * scale
+        ms_4_bar = 60*16 / bpm * scale
+        ms_2_bar = 60*8 / bpm * scale
+        ms_1_bar = 60*4 / bpm * scale
+        ms_1_2_note = 60*2 / bpm * scale
+        ms_1_4_note = 60 / bpm * scale
+        ms_1_8_note = 60 / 2 / bpm * scale
+        ms_1_16_note = 60 / 4 / bpm * scale
+        ms_1_32_note = 60 / 8 / bpm * scale
+        ms_1_64_note = 60 / 16 / bpm * scale
+        ms_1_128_note = 60 / 32 / bpm * scale
 
-        ms_1_2_note_dotted = 180/bpm*1000
-        ms_1_4_note_dotted = 90/bpm*1000
-        ms_1_8_note_dotted = 45/bpm*1000
-        ms_1_16_note_dotted = 22.5/bpm*1000
+        ms_1_2_note_dotted = 180 / bpm * scale
+        ms_1_4_note_dotted = 90 / bpm * scale
+        ms_1_8_note_dotted = 45 / bpm * scale
+        ms_1_16_note_dotted = 22.5 / bpm * scale
 
-        ms_1_2_note_triplet = 80/bpm*1000
-        ms_1_4_note_triplet = 40/bpm*1000
-        ms_1_8_note_triplet = 20/bpm*1000
-        ms_1_16_note_triplet = 10/bpm*1000
+        ms_1_2_note_triplet = 80 / bpm * scale
+        ms_1_4_note_triplet = 40 / bpm * scale
+        ms_1_8_note_triplet = 20 / bpm * scale
+        ms_1_16_note_triplet = 10 / bpm * scale
 
         self.ms_128_bar.set(f"{ms_128_bar:.06f}")
         self.ms_64_bar.set(f"{ms_64_bar:.06f}")
@@ -296,6 +300,7 @@ class App(tk.Tk):
         super().__init__()
         self.bpm_var = tk.DoubleVar()
         self.freq_var = tk.DoubleVar()
+        self.ms_x1k = tk.IntVar()
 
         # {{{1 instantiate frequency variables
         self.freq_var_oct_0_note_C = tk.DoubleVar()
@@ -500,6 +505,7 @@ class App(tk.Tk):
         self.freq_var.set(440.0)
 
         self.bpm_var.trace("w",self.trace_bpm_var)
+        self.ms_x1k.trace("w",self.trace_bpm_var)
         self.freq_var.trace("w",self.trace_freq_var)
 
         self.bpmlabel = ttk.Label(self,textvariable=self.bpm_var)
@@ -516,6 +522,11 @@ class App(tk.Tk):
                                       to=420.0,
                                       increment=1.0)
         self.bpm_spinbox.pack()
+        
+        self.ms_x1k_chkbtn = ttk.Checkbutton(self.leftframe,
+                                             text="x1000",
+                                             variable=self.ms_x1k)
+        self.ms_x1k_chkbtn.pack()
 
         self.btnframe = ttk.Labelframe(self.leftframe,labelwidget=self.bpmlabel)
         self.btnframe.pack()
