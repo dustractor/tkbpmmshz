@@ -15,26 +15,44 @@ _12 = D(12)
 
 
 
-def nextnote(freq):
+def nextnote_hp(freq):
     return freq * power(_2,_1/_12)
-def prevnote(freq):
+def prevnote_hp(freq):
     return freq * power(_2,-_1/_12)
+def nextnote(freq):
+    return freq * pow(2,1/12)
+def prevnote(freq):
+    return freq * pow(2,-1/12)
 
 class App(tk.Tk):
     # {{{1 trace_freq_var
     def trace_freq_var(self,*traceargs):
         freq = self.freq_var.get()
-        _F = D(freq)
+        hp = self.use_hp_freq.get()
+        if hp:
+            _F = D(freq)
+        else:
+            _F = freq
         notes_up = []
         notes_dn = [_F]
         _f = _F
-        for i in range((12*7)+3):
-            _f = nextnote(_f)
-            notes_up.append(_f)
-        _f = _F
-        for i in range((12*5)-3):
-            _f = prevnote(_f)
-            notes_dn.append(_f)
+        if hp:
+            for i in range((12*7)+3):
+                _f = nextnote_hp(_f)
+                notes_up.append(_f)
+            _f = _F
+            for i in range((12*5)-3):
+                _f = prevnote_hp(_f)
+                notes_dn.append(_f)
+        else:
+            for i in range((12*7)+3):
+                _f = nextnote(_f)
+                notes_up.append(round(_f,5))
+            _f = _F
+            for i in range((12*5)-3):
+                _f = prevnote(_f)
+                notes_dn.append(round(_f,5))
+
         notes = list(reversed(notes_dn))
         notes.extend(notes_up)
         note_iter = iter(notes)
@@ -187,9 +205,7 @@ class App(tk.Tk):
     def trace_bpm_var(self,*traceargs):
         bpm = self.bpm_var.get()
         use_1k = self.ms_x1k.get()
-        print("use_1k:",use_1k)
         scale = [1,1000][use_1k]
-        print("scale:",scale)
 
         ms_128_bar = 60*512 / bpm * scale
         ms_64_bar = 60*256 / bpm * scale
@@ -301,6 +317,7 @@ class App(tk.Tk):
         self.bpm_var = tk.DoubleVar()
         self.freq_var = tk.DoubleVar()
         self.ms_x1k = tk.IntVar()
+        self.use_hp_freq = tk.IntVar()
 
         # {{{1 instantiate frequency variables
         self.freq_var_oct_0_note_C = tk.DoubleVar()
@@ -507,6 +524,7 @@ class App(tk.Tk):
         self.bpm_var.trace("w",self.trace_bpm_var)
         self.ms_x1k.trace("w",self.trace_bpm_var)
         self.freq_var.trace("w",self.trace_freq_var)
+        self.use_hp_freq.trace("w",self.trace_freq_var)
 
         self.bpmlabel = ttk.Label(self,textvariable=self.bpm_var)
         self.freqlabel = ttk.Label(self,textvariable=self.freq_var)
@@ -719,6 +737,11 @@ class App(tk.Tk):
                                        to=1000.0,
                                        increment=1.0)
         self.freq_spinbox.pack()
+
+        self.use_hp_freq_chkbtn = ttk.Checkbutton(self.rightframe,
+                                                  text="high precision frequency",
+                                                  variable=self.use_hp_freq)
+        self.use_hp_freq_chkbtn.pack()
 
         self.btnframe2 = ttk.Labelframe(self.rightframe,
                                         labelwidget=self.freqlabel)
