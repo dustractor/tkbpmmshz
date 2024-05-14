@@ -1,6 +1,7 @@
 # tkbpmmshz
 tkinter bpm / milliseconds / hertz calculator
 
+![screenshot](C:\Users\user\Documents\GitHub\tkbpmmshz\Screenshot.png)
 
 notes:
 
